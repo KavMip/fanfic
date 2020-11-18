@@ -5,9 +5,30 @@ import bcrypt from 'bcryptjs';
 import middleware from '../../middlewares/middleware';
 import { extractUser } from '../../lib/api-helpers';
 
+
 const handler = nextConnect();
 
 handler.use(middleware); // see how we're reusing our middleware
+
+handler.get(async(req, res)=>{
+  if (!req.user) {
+    req.status(401).end();
+    return;
+  }
+  const id = req.query.id;
+  if (id) {
+    const post = await req.db
+      .collection("users")
+      .findOne({ _id: ObjectId(id) });
+    res.json({ post });
+  } else{
+    const users = await req.db
+    .collection("users")
+    .find()
+    .toArray();
+  res.json({ users });
+  } 
+});
 
 
 // POST /api/users
@@ -23,6 +44,7 @@ handler.post(async (req, res) => {
     res.status(400).send('Missing field(s)');
     return;
   }
+  const isAdmin = false;
   // check if email existed
   
   if ((await req.db.collection('users').countDocuments({ email })) > 0) {
@@ -31,8 +53,9 @@ handler.post(async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
   const user = await req.db
     .collection('users')
-    .insertOne({ email, password: hashedPassword, name })
+    .insertOne({ email, password: hashedPassword, name, isAdmin })
     .then(({ ops }) => ops[0]);
+
   req.logIn(user, (err) => {
     if (err) throw err;
     // when we finally log in, return the (filtered) user object

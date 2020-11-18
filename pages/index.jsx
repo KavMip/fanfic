@@ -1,8 +1,14 @@
 import React from 'react';
-import { useCurrentUser } from '../lib/hooks';
+import { useUser } from '../lib/hooks';
+import Loader from '../components/loader'
+import Posts from '../components/post/posts';
 
 const IndexPage = () => {
-  const [user] = useCurrentUser();
+	const {user,loading} = useUser();
+
+	if (loading){
+		return <Loader/>
+	}
 
   return (
     <>
@@ -26,9 +32,9 @@ const IndexPage = () => {
         </h2>
         <p>Have a wonderful day.</p>
       </div>
+      <Posts></Posts>
 
     </>
   );
 };
-
 export default IndexPage;

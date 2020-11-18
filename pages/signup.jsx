@@ -1,17 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import Head from 'next/head';
-import Router from 'next/router';
-import { useUser } from '../lib/hooks';
-import axios from 'axios';
-import { Button, Form } from 'react-bootstrap';
+import React, { useState } from "react";
+import Head from "next/head";
+import { useUser } from "../lib/hooks";
+import axios from "axios";
+import { Button, Form } from "react-bootstrap";
+import Loader from "../components/loader";
 
 const SignupPage = () => {
-  const [user, { mutate }] = useUser();
-  const [errorMsg, setErrorMsg] = useState('');
-
-  useEffect(() => {
-    if (user) Router.replace('/');
-  }, [user]);
+  const { mutate } = useUser();
+  const [errorMsg, setErrorMsg] = useState("");
+  
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,57 +17,68 @@ const SignupPage = () => {
       email: e.currentTarget.email.value,
       name: e.currentTarget.name.value,
       password: e.currentTarget.password.value,
+
     };
-    console.log(body);
+		setLoading(true);
     try {
       const res = await axios.post("/api/users", body);
       if (res.status === 201) {
         const userObj = await res.data.user;
-        mutate(userObj);
+        await mutate(userObj);
       }
     } catch (err) {
+			setLoading(false);
       setErrorMsg(err.response.data);
-    }
-
-  };
-
+		}
+	};
+	
+	if (loading) {
+    return <Loader />;
+  }
   return (
     <>
       <Head>
         <title>Sign up</title>
       </Head>
       <div className="forms-wrapper">
-        <Form onSubmit={handleSubmit} >
-          {errorMsg ? <p style={{ color: 'red' }}>{errorMsg}</p> : null}
+        <Form onSubmit={handleSubmit}>
+          {errorMsg ? <p style={{ color: "red" }}>{errorMsg}</p> : null}
           <Form.Group>
             <Form.Label>Name</Form.Label>
-            <Form.Control id="name"
+            <Form.Control
+              id="name"
               name="name"
               type="text"
-              placeholder="Your name" />
+              placeholder="Your name"
+            />
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Email</Form.Label>
-            <Form.Control id="email"
+            <Form.Control
+              id="email"
               name="email"
               type="email"
-              placeholder="Email address" />
+              placeholder="Email address"
+            />
           </Form.Group>
 
           <Form.Group>
             <Form.Label>Password</Form.Label>
-            <Form.Control id="password"
+            <Form.Control
+              id="password"
               name="password"
               type="password"
-              placeholder="Create a password" />
+              placeholder="Create a password"
+            />
           </Form.Group>
 
-          <Button variant="primary" type="submit">Sign Up</Button>
+          <Button variant="primary" type="submit">
+            Sign Up
+          </Button>
         </Form>
       </div>
     </>
   );
 };
-
 export default SignupPage;
