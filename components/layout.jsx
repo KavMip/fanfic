@@ -13,7 +13,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const Layout = ({ children }) => {
   const { user, mutate } = useUser();
-  console.log(user.isAdmin);
   const handleLogout = async () => {
     await fetch("/api/auth", {
       method: "DELETE",

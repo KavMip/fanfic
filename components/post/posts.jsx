@@ -47,7 +47,7 @@ function Post({ post }) {
                 <div className="post">
                     <h3>{post.name}</h3>
 
-                    {user.isAdmin ? (
+                    {user && user.isAdmin ? (
                         <Link href={"/profile?id=" + post.user._id}>
                             <p>{post.user.name}</p>
                         </Link>
