@@ -8,16 +8,26 @@ import {
   Nav,
   InputGroup,
   FormControl,
+  Button,
+  Form,
 } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useRouter } from "next/router";
+import { Search } from 'react-bootstrap-icons';
 
 const Layout = ({ children }) => {
-  const { user, mutate } = useUser();
+	const { user, mutate } = useUser();
+	const router=useRouter();
   const handleLogout = async () => {
     await fetch("/api/auth", {
       method: "DELETE",
     });
     mutate(null);
+  };
+  const handleSearch = (e) => {
+		e.preventDefault();
+
+		router.push('/?q='+e.currentTarget.search.value)
   };
   return (
     <>
@@ -62,30 +72,25 @@ const Layout = ({ children }) => {
             margin-bottom: 1rem;
           }
 
-          @media (min-width: 768px){
-            .container{
-
-              max-width:100% !important;
+          @media (min-width: 768px) {
+            .container {
+              max-width: 100% !important;
             }
-            .log-wrapper{
-              min-width:200px;
-              justify-content:space-between;
+            .log-wrapper {
+              min-width: 200px;
+              justify-content: space-between;
             }
-          
-
           }
-          @media (max-width: 768px){
-            #pages-elements{
-              width:80%;
-              margin-left:auto;
-              margin-right:auto;
+          @media (max-width: 768px) {
+            #pages-elements {
+              width: 80%;
+              margin-left: auto;
+              margin-right: auto;
             }
-            .log-wrapper{
-              justify-content:space-between;
+            .log-wrapper {
+              justify-content: space-between;
             }
-
           }
-        
         `}
       </style>
       <>
@@ -118,13 +123,17 @@ const Layout = ({ children }) => {
                 <Nav.Link href="#home">Next.js + MongoDB App</Nav.Link>
               </Link>
             </Nav>
+              <Form inline onSubmit={handleSearch}>
             <InputGroup className="mb-3">
-              <FormControl
-                placeholder="Search"
-                aria-label="Search"
-                aria-describedby="basic-addon2"
-              />
+                <Form.Control
+                  placeholder="Search"
+                  aria-label="Search"
+									aria-describedby="basic-addon2"
+									id="search"
+                />
+                <Button type="submit" className="mb-2"><Search/></Button>
             </InputGroup>
+              </Form>
 
             {!user ? (
               <Nav>
@@ -138,29 +147,27 @@ const Layout = ({ children }) => {
                 </div>
               </Nav>
             ) : (
-                <Nav id="pages-elements">
-                  <div className="log-wrapper">
-                    <Link href="/profile">
-                      <Nav.Link href="#home">Profil</Nav.Link>
+              <Nav id="pages-elements">
+                <div className="log-wrapper">
+                  <Link href="/profile">
+                    <Nav.Link href="#home">Profil</Nav.Link>
+                  </Link>
+                  {user.isAdmin ? (
+                    <Link href="/adminPage">
+                      <Nav.Link href="#home">Admin Page</Nav.Link>
                     </Link>
-                    {user.isAdmin ? (
-                      <Link href="/adminPage">
-                        <Nav.Link href="#home">Admin Page</Nav.Link>
-                      </Link>
-                    ):null
+                  ) : null}
 
-                    }
-
-                    {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-                    <Link href="/">
-                      <Nav.Link onClick={handleLogout} href="#home">
-                        {" "}
+                  {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
+                  <Link href="/">
+                    <Nav.Link onClick={handleLogout} href="#home">
+                      {" "}
                       Logout
                     </Nav.Link>
-                    </Link>
-                  </div>
-                </Nav>
-              )}
+                  </Link>
+                </div>
+              </Nav>
+            )}
           </Container>
         </Navbar>
       </>
@@ -168,6 +175,5 @@ const Layout = ({ children }) => {
       <footer></footer>
     </>
   );
-}
-
+};
 export default Layout;
