@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import Loader from '../../components/loader'
 import Axios from 'axios'
-import { Form, Col, Button, Row, Tabs, Tab } from "react-bootstrap";
 import ReactMarkdown from "react-markdown";
 
 const PostReadPage = () => {
@@ -27,7 +26,6 @@ const PostReadPage = () => {
         }
 
     }, [pid]);
-    console.log(currentPost);
 
     if (loading) {
         return <Loader />;
@@ -36,6 +34,12 @@ const PostReadPage = () => {
         <>
             <style jsx>
                 {`
+                .post-read-page{
+                    border-bottom:2px solid black;
+                    width:80%;
+                    margin-left:auto;
+                    margin-right:auto;
+                }
           .elements-wrapper{
               width:60%;
               margin-left:auto;
@@ -50,15 +54,19 @@ const PostReadPage = () => {
             }
         `}
             </style>
-            <div className="elements-wrapper">
-                <h1 className="post-title">{currentPost.name}</h1>
-                <p>{currentPost.description}</p>
-                <p>{currentPost.genres.join(", ") }</p>
-                <ReactMarkdown>
-                    {currentPost.text}
-                </ReactMarkdown>
+            <div className="post-read-page">
+                <div className="elements-wrapper">
+                    <h1 className="post-title">{currentPost.name}</h1>
+                    <p>{currentPost.description}</p>
 
+                    <p>{currentPost.genres && currentPost.genres.join(", ")}</p>
+                    <ReactMarkdown>
+                        {currentPost.text}
+                    </ReactMarkdown>
+
+                </div>
             </div>
+
 
         </>
     )
