@@ -11,8 +11,10 @@ const AdminPage = () => {
 
 
     const { users, loading } = useAllUsers();
+    console.log(users);
     const [role, setRole] = useState([]);
 
+    console.log(users);
 
 
 
@@ -46,7 +48,7 @@ const AdminPage = () => {
                 <tbody>
                     {users.map((user, index) => {
                         return (
-                            <Link key={index} href={"/profile/edit/"+ user._id}>
+                            <Link key={index} href={"/profile?id="+ user._id}>
                                 <tr className="user-element" >
                                     <td>{index + 1}</td>
                                     <td>{user.name}</td>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useRouterUser } from "../../lib/hooks";
+import { useUserPosts, useRouterUser } from "../../lib/hooks";
 import {
   ButtonToolbar,
   ButtonGroup,
@@ -101,7 +101,7 @@ const ProfilePage = () => {
       <div>
         <ButtonToolbar aria-label="Toolbar with button groups">
           <ButtonGroup className="mr-2" aria-label="First group">
-            <Link href="/profile/post">
+            <Link href={"/profile/post?userId=" +routerUser._id}>
               <Button>Create new element</Button>
             </Link>
             <Button

@@ -6,18 +6,21 @@ const handler = nextConnect();
 handler.use(middleware);
 
 handler.post(async (req, res) => {
-  const { name, description, genres, text } = req.body;
+  const { name, description, genres, text, userId } = req.body;
 
   if (!name || !description || !genres || !text) {
     res.status(400).send("Missing field(s)");
     return;
-  }
+	}
+	if (userId && ObjectId(req.user._id).toString() !== ObjectId(userId).toString() && !req.user.isAdmin){
+		return res.status(403).send("No Permission to Access.")
+	}
   const data = {
     name,
     description,
     genres,
     text,
-    creator: ObjectId(req.user._id),
+    creator: ObjectId(userId || req.user._id),
   };
   await req.db.collection("posts").insertOne(data);
 
@@ -33,6 +36,7 @@ handler.get(async (req, res) => {
   }
   const id = req.query.id;
   const userId = req.query.userId;
+  console.log(id);
   if (id) {
     const post = await req.db
       .collection("posts")

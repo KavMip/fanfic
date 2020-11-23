@@ -41,6 +41,7 @@ const Post = () => {
 
   const router = useRouter();
   const postId = router.query.id;
+  const userId = router.query.userId;
   const textFormRef = useRef();
 
   useEffect(() => {
@@ -84,7 +85,10 @@ const Post = () => {
       description: descriptionForm,
       genres: selectedGenres,
       text: textForm,
-    };
+		};
+		if(userId){
+			body.userId=userId;
+		}
     setLoading(true);
     try {
       let res;
@@ -94,8 +98,7 @@ const Post = () => {
         res = await axios.post("/api/user/posts", body);
       }
       if (res.status === 201) {
-				setLoading(false);
-				setErrorMsg('Data saved');
+				router.back();
       }
     } catch (err) {
       setErrorMsg(err.response.data);
