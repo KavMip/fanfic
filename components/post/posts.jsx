@@ -6,14 +6,7 @@ import Link from "next/link";
 import { useUser } from "../../lib/hooks"
 
 function Post({ post }) {
-
-
     const { user } = useUser();
-
-
-
-
-
     return (
         <>
             <style jsx>
@@ -30,11 +23,7 @@ function Post({ post }) {
           .post-wrapper:hover {
             box-shadow: 0 8px 30px rgba(0,0,0,0.12);
           }
-          
-          .post{
-             
 
-          }
         `}
             </style>
             <div className="post-wrapper">
@@ -51,9 +40,10 @@ function Post({ post }) {
                     )}
                     <p>{post.genres.join(", ")}</p>
                     <p>{post.description}</p>
-                    <Link href={`/post/${post._id}`}>
+                    {user ?<Link href={`/post/${post._id}`}>
                         <button >Read more</button>
-                    </Link>
+                    </Link> : null}
+                    
 
 
                 </div>

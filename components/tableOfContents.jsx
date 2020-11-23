@@ -117,13 +117,13 @@ const TableOfContents = ({ content, setContent, setSelectionRange }) => {
     }
   };
   const createChapter = () => {
-		const addString = "\n## New chapter";
-		setContent(content + addString);
+    const addString = "\n## New chapter";
+    setContent(content + addString);
   };
   const deleteChapter = (index) => {
     setContent(
       content.substring(0, tableOfContents[index].startIndex) +
-        content.substring(tableOfContents[index].endIndex, content.length)
+      content.substring(tableOfContents[index].endIndex, content.length)
     );
   };
   const editChapter = (index) => {

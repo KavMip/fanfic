@@ -36,7 +36,6 @@ handler.get(async (req, res) => {
   }
   const id = req.query.id;
   const userId = req.query.userId;
-  console.log(id);
   if (id) {
     const post = await req.db
       .collection("posts")

@@ -32,7 +32,6 @@ handler.get(async(req, res)=>{
 });
 
 
-// POST /api/users
 handler.post(async (req, res) => {
 
   const { name, password } = req.body;
@@ -46,8 +45,8 @@ handler.post(async (req, res) => {
     return;
   }
   const isAdmin = false;
+
   // check if email existed
-  
   if ((await req.db.collection('users').countDocuments({ email })) > 0) {
    return res.status(403).send('The email has already been used.');
   }
