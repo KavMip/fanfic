@@ -14,29 +14,32 @@ import Loader from "../../components/loader";
 
 const ProfilePage = () => {
   const routerUser = useRouterUser();
-  const { posts, mutate: mutatePosts, loading: loadingPosts, } = useUserPosts();
   const [checkedPosts, setCheckedPosts] = useState([]);
-  const [routerUserPost, setrouterUserPost] = useState();
+  const [routerUserPost, setrouterUserPost] = useState([]);
   const [loading, setLoading] = useState(false);
 
-
   useEffect(() => {
-
+    setLoading(true);
     if (routerUser) {
-      Axios.get("/api/user/posts", { params: { userId: routerUser._id } }).then((res) => {
-        setrouterUserPost(res.data.user);
-      }).catch((err) => {
-
-      })
+      Axios.get("/api/user/posts", { params: { userId: routerUser._id } })
+        .then((res) => {
+          setrouterUserPost(res.data.posts);
+          setLoading(false);
+        })
+        .catch((err) => {
+          setLoading(false);
+        });
     }
-  }, [routerUser])
+  }, [routerUser]);
 
   const handleDelete = async () => {
     setLoading(true);
-    const res = await axios.delete("/api/user/posts", {
+    const res = await Axios.delete("/api/user/posts", {
       data: { id: checkedPosts },
     });
-    await mutatePosts(res.posts);
+    setrouterUserPost((old) =>
+      old.filter((e) => checkedPosts.every((postId) => postId !== e._id))
+    );
     setCheckedPosts([]);
     setLoading(false);
   };
@@ -141,20 +144,20 @@ const ProfilePage = () => {
             </tr>
           </thead>
           <tbody>
-            {posts.map((post, index) => {
+            {routerUserPost.map((post, index) => {
               return (
-                <Link href={`/profile/post?id=${routerUserPost._id}`} key={routerUserPost._id}>
+                <Link href={`/profile/post?id=${post._id}`} key={post._id}>
                   <tr>
                     <td>
                       <Form.Check
-                        checked={checkedPosts.some((e) => e === routerUserPost._id)}
+                        checked={checkedPosts.some((e) => e === post._id)}
                         type="checkbox"
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setCheckedPosts((old) => [...old, routerUserPost._id]);
+                            setCheckedPosts((old) => [...old, post._id]);
                           } else {
                             setCheckedPosts((old) =>
-                              old.filter((e) => e !== routerUserPost._id)
+                              old.filter((e) => e !== post._id)
                             );
                           }
                         }}
@@ -162,10 +165,10 @@ const ProfilePage = () => {
                       />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{routerUserPost.name}</td>
-                    <td>{routerUserPost.description}</td>
-                    <td>{routerUserPost.genres.join(", ")}</td>
-                    <td>{routerUserPost.text}</td>
+                    <td>{post.name}</td>
+                    <td>{post.description}</td>
+                    <td>{post.genres.join(", ")}</td>
+                    <td>{post.text}</td>
                   </tr>
                 </Link>
               );

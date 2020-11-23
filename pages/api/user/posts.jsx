@@ -32,6 +32,7 @@ handler.get(async (req, res) => {
     return;
   }
   const id = req.query.id;
+  const userId = req.query.userId;
   console.log(id);
   if (id) {
     const post = await req.db
@@ -41,13 +42,13 @@ handler.get(async (req, res) => {
   } else {
     const posts = await req.db
       .collection("posts")
-      .find({ creator: ObjectId(req.user._id) })
+      .find({ creator: ObjectId(userId || req.user._id) })
       .toArray();
     res.json({ posts });
   }
 });
 
-handler.delete(async (req, res) =>{
+handler.delete(async (req, res) => {
   if (!req.user) {
     req.status(401).end();
     return;
@@ -61,10 +62,7 @@ handler.delete(async (req, res) =>{
       _id: { $in: id.map((e) => ObjectId(e)) },
     });
   }
-  const posts = await postsCollection
-    .find({ creator: ObjectId(req.user._id) })
-    .toArray();
-  res.json({ posts });
+  res.json({ deletedId: id });
 });
 
 handler.put(async (req, res) => {
@@ -79,11 +77,13 @@ handler.put(async (req, res) => {
     description,
     genres,
     text,
-    creator: ObjectId(req.user._id),
   };
   const find = await req.db.collection("posts").findOne({ _id: ObjectId(id) });
 
-  if (ObjectId(req.user._id).toString() !== ObjectId(find.creator).toString()) {
+  if (
+    !req.user.isAdmin &&
+    ObjectId(req.user._id).toString() !== ObjectId(find.creator).toString()
+  ) {
     return res.status(403).send("No Permission to Access.");
   }
   await req.db

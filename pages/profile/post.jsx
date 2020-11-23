@@ -94,7 +94,8 @@ const Post = () => {
         res = await axios.post("/api/user/posts", body);
       }
       if (res.status === 201) {
-        await router.replace("/profile");
+				setLoading(false);
+				setErrorMsg('Data saved');
       }
     } catch (err) {
       setErrorMsg(err.response.data);
