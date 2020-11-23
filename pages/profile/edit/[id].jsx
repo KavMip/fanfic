@@ -35,7 +35,6 @@ const ProfileSection = () => {
         if(event.currentTarget.role){
             body.isAdmin = event.currentTarget.role.value === userRoles[0] ? true : false;
         }
-        console.log(body)
         try {
             const res = await Axios.put('/api/user/', body);
             const userData = await res.data;

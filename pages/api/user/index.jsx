@@ -17,7 +17,6 @@ handler.put(async (req, res) => {
   // const senderUser = await req.db.collection('users').findOne({ _id: ObjectId(id) });
   if (req.user.isAdmin || ObjectId(req.user._id).toString() === ObjectId(id).toString()) {
     const setValues = { name, email}
-    console.log(setValues);
     if(isAdmin !== undefined && req.user.isAdmin){
       setValues.isAdmin = isAdmin;
     }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useUserPosts, useRouterUser } from "../../lib/hooks";
+import { useRouterUser } from "../../lib/hooks";
 import {
   ButtonToolbar,
   ButtonGroup,

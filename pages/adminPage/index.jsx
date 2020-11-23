@@ -11,10 +11,8 @@ const AdminPage = () => {
 
 
     const { users, loading } = useAllUsers();
-    console.log(users);
     const [role, setRole] = useState([]);
 
-    console.log(users);
 
 
 
