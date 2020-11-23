@@ -7,6 +7,7 @@ handler.use(middleware);
 
 handler.get(async (req, res) => {
   const posts = await req.db.collection("posts").find().toArray();
+  
 
   for( const post of posts){
     const user = await req.db.collection("users").findOne({_id:ObjectId(post.creator)})

@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Head from "next/head";
 import Link from "next/link";
-import { useUserPosts, useUser } from "../../lib/hooks";
-import { useRouter } from "next/router";
-
+import { useUserPosts, useRouterUser } from "../../lib/hooks";
 import {
   ButtonToolbar,
   ButtonGroup,
@@ -11,16 +9,27 @@ import {
   Table,
   Form,
 } from "react-bootstrap";
-import axios from "axios";
+import Axios from "axios";
 import Loader from "../../components/loader";
 
 const ProfilePage = () => {
-  const {user} = useUser();
-  const router = useRouter();
-  const {posts, mutate:mutatePosts, loading:loadingPosts} = useUserPosts();
+  const routerUser = useRouterUser();
+  const { posts, mutate: mutatePosts, loading: loadingPosts, } = useUserPosts();
   const [checkedPosts, setCheckedPosts] = useState([]);
-  const { name, email, bio, profilePicture } = user || {};
+  const [routerUserPost, setrouterUserPost] = useState();
   const [loading, setLoading] = useState(false);
+
+
+  useEffect(() => {
+
+    if (routerUser) {
+      Axios.get("/api/user/posts", { params: { userId: routerUser._id } }).then((res) => {
+        setrouterUserPost(res.data.user);
+      }).catch((err) => {
+
+      })
+    }
+  }, [routerUser])
 
   const handleDelete = async () => {
     setLoading(true);
@@ -32,7 +41,7 @@ const ProfilePage = () => {
     setLoading(false);
   };
 
-  if (loadingPosts || loading) {
+  if (loading || !routerUser) {
     return <Loader />;
   }
   return (
@@ -72,20 +81,17 @@ const ProfilePage = () => {
         <title>{name}</title>
       </Head>
       <div>
-        {profilePicture ? (
-          <img src={profilePicture} width="256" height="256" alt={name} />
-        ) : null}
         <section>
           <div>
-            <h2>{name}</h2>
-            <Link href="/profile/settings">
+            <h2>{routerUser.name}</h2>
+            <Link href={"/profile/edit/" + routerUser._id}>
               <button type="button">Edit</button>
             </Link>
           </div>
           {/* Bio
           <p>{bio}</p> */}
           Email
-          <p>{email}</p>
+          <p>{routerUser.email}</p>
         </section>
       </div>
 
@@ -113,14 +119,14 @@ const ProfilePage = () => {
                 <Form.Check
                   type="checkbox"
                   checked={
-                    posts.length > 0 &&
-                    posts.every((post) =>
+                    routerUserPost.length > 0 &&
+                    routerUserPost.every((post) =>
                       checkedPosts.some((checkId) => post._id === checkId)
                     )
                   }
                   onChange={(e) => {
                     if (e.target.checked) {
-                      setCheckedPosts(posts.map((post) => post._id));
+                      setCheckedPosts(routerUserPost.map((post) => post._id));
                     } else {
                       setCheckedPosts([]);
                     }
@@ -137,18 +143,18 @@ const ProfilePage = () => {
           <tbody>
             {posts.map((post, index) => {
               return (
-                <Link href={`/profile/post?id=${post._id}`} key={post._id}>
+                <Link href={`/profile/post?id=${routerUserPost._id}`} key={routerUserPost._id}>
                   <tr>
                     <td>
                       <Form.Check
-                        checked={checkedPosts.some((e) => e === post._id)}
+                        checked={checkedPosts.some((e) => e === routerUserPost._id)}
                         type="checkbox"
                         onChange={(e) => {
                           if (e.target.checked) {
-                            setCheckedPosts((old) => [...old, post._id]);
+                            setCheckedPosts((old) => [...old, routerUserPost._id]);
                           } else {
                             setCheckedPosts((old) =>
-                              old.filter((e) => e !== post._id)
+                              old.filter((e) => e !== routerUserPost._id)
                             );
                           }
                         }}
@@ -156,10 +162,10 @@ const ProfilePage = () => {
                       />
                     </td>
                     <td>{index + 1}</td>
-                    <td>{post.name}</td>
-                    <td>{post.description}</td>
-                    <td>{post.genres.join(", ")}</td>
-                    <td>{post.text}</td>
+                    <td>{routerUserPost.name}</td>
+                    <td>{routerUserPost.description}</td>
+                    <td>{routerUserPost.genres.join(", ")}</td>
+                    <td>{routerUserPost.text}</td>
                   </tr>
                 </Link>
               );

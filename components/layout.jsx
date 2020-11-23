@@ -61,6 +61,31 @@ const Layout = ({ children }) => {
           .navbar {
             margin-bottom: 1rem;
           }
+
+          @media (min-width: 768px){
+            .container{
+
+              max-width:100% !important;
+            }
+            .log-wrapper{
+              min-width:200px;
+              justify-content:space-between;
+            }
+          
+
+          }
+          @media (max-width: 768px){
+            #pages-elements{
+              width:80%;
+              margin-left:auto;
+              margin-right:auto;
+            }
+            .log-wrapper{
+              justify-content:space-between;
+            }
+
+          }
+        
         `}
       </style>
       <>
@@ -113,7 +138,7 @@ const Layout = ({ children }) => {
                 </div>
               </Nav>
             ) : (
-                <Nav>
+                <Nav id="pages-elements">
                   <div className="log-wrapper">
                     <Link href="/profile">
                       <Nav.Link href="#home">Profil</Nav.Link>

@@ -4,6 +4,7 @@ import normalizeEmail from 'validator/lib/normalizeEmail';
 import bcrypt from 'bcryptjs';
 import middleware from '../../middlewares/middleware';
 import { extractUser } from '../../lib/api-helpers';
+import {ObjectId} from 'mongodb'
 
 
 const handler = nextConnect();
@@ -17,10 +18,10 @@ handler.get(async(req, res)=>{
   }
   const id = req.query.id;
   if (id) {
-    const post = await req.db
+    const user = await req.db
       .collection("users")
       .findOne({ _id: ObjectId(id) });
-    res.json({ post });
+    res.json({ user });
   } else{
     const users = await req.db
     .collection("users")

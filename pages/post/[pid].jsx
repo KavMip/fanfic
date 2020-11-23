@@ -1,15 +1,31 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { useRouter } from 'next/router'
+import Loader from '../../components/loader'
+
 
  const PostReadPage = () => {
 
     const router = useRouter();
-    const { pid } = router.query
+    const { id } = router.query
+    console.log(id);
+    const [loading, setLoading] = useState(false);
+    const [currentPost, setCurrentPost] = useState();
+    
+    
+
+
+
+
+
+    if (loading) {
+        return <Loader/>;
+    }
+
 
 
     return (
         <>
-         <p>Post: {pid}</p>
+         <p>Post: {id}</p>
         </>
     )
 }

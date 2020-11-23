@@ -32,6 +32,7 @@ handler.get(async (req, res) => {
     return;
   }
   const id = req.query.id;
+  console.log(id);
   if (id) {
     const post = await req.db
       .collection("posts")
@@ -46,7 +47,7 @@ handler.get(async (req, res) => {
   }
 });
 
-handler.delete(async (req, res) => {
+handler.delete(async (req, res) =>{
   if (!req.user) {
     req.status(401).end();
     return;
