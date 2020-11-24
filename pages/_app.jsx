@@ -10,7 +10,7 @@ import { useRouter } from "next/router";
 export const UserContext = React.createContext({});
 
 export default function MyApp({ Component, pageProps }) {
-  
+
   const { user, mutate, loading } = useUserSWR();
   const router = useRouter();
 
@@ -21,6 +21,8 @@ export default function MyApp({ Component, pageProps }) {
       await router.replace("/");
     } else if (!isAuth && ["/profile"].some((e) => route.indexOf(e) !== -1)) {
       await router.replace("/login");
+    } else if(!user.isAdmin && ["/adminPage"].some((e)=> route.indexOf(e)!== -1)){
+      await router.replace("/");
     }
   };
 

@@ -8,6 +8,7 @@ import Link from "next/link";
 
 
 const AdminPage = () => {
+    
     const { users, loading } = useAllUsers();
     const [role, setRole] = useState([]);
     if (loading) {

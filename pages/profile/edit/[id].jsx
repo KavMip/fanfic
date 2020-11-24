@@ -153,13 +153,7 @@ const ProfileSection = () => {
                     {user.isAdmin ? (
                         <label className="edit-elements" htmlFor="name">
                             Role
-                            {/* <input
-                             required
-                             id="email"
-                             name="email"
-                             type="email"
-                             defaultValue={currentUser.email}
-                         /> */}
+                 
                             <Form.Control as="select"
                                 defaultValue={routerUser.isAdmin ? userRoles[0] : userRoles[1]}
                                 id="role"
@@ -172,14 +166,6 @@ const ProfileSection = () => {
 
                             </Form.Control>
 
-                            {/* <select className="role-select"
-                                id="role"
-                                name="role"
-                                defaultValue={user.isAdmin ? null : null}
-                            >
-                                <option>Admin</option>
-                                <option>User</option>
-                            </select> */}
                         </label>
                     ) : null}
 
